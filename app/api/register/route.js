@@ -11,7 +11,7 @@ export async function POST(req) {
         const user = await User.findOne({email})
         // Validate User
         if(user){
-            return NextResponse.json({message: 'User Already Exist', status: 400})
+            return NextResponse.json({message: 'User Already Exist', success: false})
         }
         // Hash Password
         const hashPassword = await bcrypt.hash(password, 10)
@@ -21,8 +21,14 @@ export async function POST(req) {
             email,
             password: hashPassword
         }).save()
-        return NextResponse.json({message: 'User Created Successful', status: 200})
+        return NextResponse.json({message: 'User Created Successful', success: true})
     } catch (error) {
         return NextResponse.json({error: error.message})
     }
+}
+
+// Get 
+export async function GET(){
+
+    return NextResponse.json({message: 'okkk', app:process.env.API_BASE_URL})
 }

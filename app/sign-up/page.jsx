@@ -1,9 +1,12 @@
 'use client'
 import toastAlert from '@/helper/toastAlert'
+import axios from 'axios'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const SignUp = () => {
+  const router = useRouter()
 
     // handleSubmitAuthForm
     const handleSubmitAuthForm = async(e)=>{
@@ -14,7 +17,24 @@ const SignUp = () => {
         const password = form.password.value
         // Validate
         if(!name || !email || !password) return toastAlert('error', 'All Fileds Are Required!')
-        console.log({name, email, password})
+       try {
+        const userInfo ={name, email, password}
+        console.log(process.env.API_BASE_URL)
+        const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/register`, userInfo)
+        console.log(data)
+        // Success Message
+        if(data.success) {
+          toastAlert('success', data?.message)
+          
+          router.push('/')
+        }else{
+          toastAlert('error', data?.message)
+        }
+
+
+       } catch (error) {
+       toastAlert('error', error.message)
+       }
     }
   return (
     <div className='w-full h-screen flex justify-center items-center'>
